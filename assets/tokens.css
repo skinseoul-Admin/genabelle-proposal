@@ -1,0 +1,18 @@
+/* SkinSeoul × Genabelle — shared design tokens (Pretendard + brand palette) */
+@font-face { font-family:"Pretendard"; font-weight:400; font-display:swap; src:url("./fonts/Pretendard-Regular.otf") format("opentype"); }
+@font-face { font-family:"Pretendard"; font-weight:500; font-display:swap; src:url("./fonts/Pretendard-Medium.otf") format("opentype"); }
+@font-face { font-family:"Pretendard"; font-weight:600; font-display:swap; src:url("./fonts/Pretendard-SemiBold.otf") format("opentype"); }
+@font-face { font-family:"Pretendard"; font-weight:700; font-display:swap; src:url("./fonts/Pretendard-Bold.otf") format("opentype"); }
+
+:root{
+  --purple:#582DB5; --purple600:#3D1690; --purple700:#311275;
+  --purple100:#E1D3FF; --purple50:#F1EAFE;
+  --ink:#231F2A; --ink900:#04000C; --gray:#605D66; --gray400:#7E7C83;
+  --white:#fff; --n50:#F7F7F9; --border:#D6D6D6;
+  --success:#15803D; --success-bg:#E6FDEE;
+  --font:"Pretendard","Apple SD Gothic Neo",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;font-family:var(--font);color:var(--ink);background:#fff}
+img{max-width:100%;display:block}
