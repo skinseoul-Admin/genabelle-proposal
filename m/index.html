@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>제나벨 × SkinSeoul — 제안서</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      color: var(--ink);
+      background: #fff;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+
+    /* ===== STICKY NAV ===== */
+    #m-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--purple700);
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+    }
+    #m-nav-logo { height: 22px; width: auto; }
+    #menu-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      line-height: 1;
+    }
+    #m-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: var(--purple100);
+      width: 0%;
+      transition: width 0.08s linear;
+      pointer-events: none;
+    }
+
+    /* ===== SECTION MENU SHEET ===== */
+    #menu-sheet {
+      position: fixed;
+      top: 48px;
+      left: 0;
+      right: 0;
+      background: var(--ink900);
+      z-index: 99;
+      transform: translateY(-110%);
+      transition: transform 0.24s ease;
+      border-bottom: 2px solid var(--purple);
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+    }
+    #menu-sheet.open { transform: translateY(0); }
+    #menu-sheet ul { list-style: none; padding: 8px 0; }
+    #menu-sheet ul li a {
+      display: block;
+      padding: 14px 20px;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    #menu-sheet ul li:last-child a { border-bottom: none; }
+
+    /* ===== SECTION BASES ===== */
+    .m-section { padding: 40px 20px; }
+    .m-section--dark { background: var(--ink900); color: #fff; }
+    .m-section--light { background: var(--n50); }
+
+    /* ===== OVERLINE ===== */
+    .m-overline {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .m-overline::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .m-section--dark .m-overline { color: var(--purple100); }
+    .m-section--light .m-overline,
+    .m-section:not(.m-section--dark) .m-overline { color: var(--purple); }
+
+    /* ===== HEADLINE ===== */
+    .m-headline {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .m-section--dark .m-headline { color: #fff; }
+
+    /* ===== LEAD ===== */
+    .m-lead {
+      font-size: 16px;
+      line-height: 1.72;
+      color: var(--gray);
+      margin-bottom: 24px;
+    }
+    .m-section--dark .m-lead { color: rgba(255,255,255,0.62); }
+    .m-lead strong { font-weight: 700; }
+    .m-section--dark .m-lead strong { color: #fff; }
+
+    /* ===== COVER ===== */
+    #cover {
+      background: linear-gradient(155deg, var(--purple) 0%, var(--purple700) 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    #cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .cover-inner {
+      position: relative;
+      z-index: 1;
+      padding: 40px 20px 32px;
+    }
+    .cover-logo { height: 30px; width: auto; margin-bottom: 32px; }
+    .cover-overline {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .cover-overline::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .cover-title {
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.12;
+      color: #fff;
+      margin-bottom: 18px;
+    }
+    .cover-title .t2 { color: var(--purple100); }
+    .cover-sub {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 28px;
+    }
+    .cover-meta {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .cover-meta-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 3px;
+    }
+    .cover-meta-val {
+      font-size: 14px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    /* ===== STAT GRID ===== */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      z-index: 1;
+      background: rgba(0,0,0,0.22);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat-item {
+      padding: 20px 14px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    .stat-item:nth-child(2) { border-right: none; }
+    .stat-item:nth-child(3) {
+      grid-column: 1 / -1;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-right: none;
+    }
+    .stat-num {
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-desc {
+      font-size: 12px;
+      color: var(--purple100);
+      line-height: 1.45;
+    }
+
+    /* ===== WHY CARDS ===== */
+    .why-card-stack { display: flex; flex-direction: column; gap: 12px; }
+    .why-card {
+      background: #fff;
+      border-top: 3px solid var(--purple);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--purple);
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .why-card-n {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple);
+    }
+    .why-card-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--purple50);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple);
+    }
+    .why-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .why-card-body {
+      font-size: 15px;
+      line-height: 1.68;
+      color: var(--gray);
+    }
+
+    /* ===== SCOPE PANELS ===== */
+    .scope-stack { display: flex; flex-direction: column; gap: 14px; }
+    .scope-panel {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-top: 3px solid var(--purple);
+      padding: 22px 18px;
+    }
+    .scope-ph {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .scope-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      background: var(--purple);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .scope-tag {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 3px;
+    }
+    .scope-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .scope-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .scope-list li {
+      font-size: 15px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.7);
+      padding-left: 16px;
+      position: relative;
+    }
+    .scope-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      background: var(--purple100);
+      border-radius: 50%;
+    }
+    .scope-list li strong { color: #fff; font-weight: 600; }
+    .scope-note {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-left: 3px solid rgba(225,211,255,0.3);
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+    }
+
+    /* ===== TABLE CARDS (mobile reflow of tables) ===== */
+    .tcard-list { display: flex; flex-direction: column; gap: 12px; }
+    .tcard {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--purple);
+      padding: 18px;
+    }
+    .tcard--dark {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-top: 3px solid var(--purple);
+    }
+    .tcard-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple600);
+      margin-bottom: 8px;
+    }
+    .tcard--dark .tcard-label { color: var(--purple100); }
+    .tcard-value {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+    .tcard--dark .tcard-value { color: rgba(255,255,255,0.72); }
+    .tcard-value strong { font-weight: 700; }
+    .tcard-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--purple700);
+      margin-top: 10px;
+    }
+
+    /* ===== SETUP NOTE ===== */
+    .setup-note {
+      font-size: 13px;
+      color: var(--gray400);
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-left: 3px solid var(--purple50);
+      line-height: 1.6;
+    }
+
+    /* ===== BAND IMAGE ===== */
+    .band-wrap { position: relative; }
+    .band-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .band-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(8,2,22,0.42);
+      pointer-events: none;
+    }
+    .band-caption {
+      position: absolute;
+      bottom: 10px;
+      left: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      z-index: 1;
+    }
+
+    /* ===== PHASE CARDS (roadmap) ===== */
+    .phase-stack { display: flex; flex-direction: column; gap: 12px; }
+    .phase-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 22px 18px;
+    }
+    .phase-card.p-active {
+      border-top: 3px solid var(--purple100);
+      background: rgba(88,45,181,0.22);
+    }
+    .phase-n {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 4px;
+    }
+    .phase-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .phase-time {
+      font-size: 13px;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .phase-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .phase-list li {
+      font-size: 15px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+    }
+    .phase-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--purple100);
+    }
+    .roadmap-note {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+
+    /* ===== REVENUE BOXES ===== */
+    .rev-stack { display: flex; flex-direction: column; gap: 12px; }
+    .rev-box {
+      padding: 28px 22px;
+    }
+    .rev-box.rb-dark { background: var(--purple); }
+    .rev-box.rb-light { background: var(--n50); border: 2px solid var(--border); }
+    .rb-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .rev-box.rb-dark .rb-label { color: var(--purple100); }
+    .rev-box.rb-light .rb-label { color: var(--purple); }
+    .rb-sub { font-size: 14px; margin-bottom: 6px; }
+    .rev-box.rb-dark .rb-sub { color: rgba(255,255,255,0.65); }
+    .rev-box.rb-light .rb-sub { color: var(--gray); }
+    .rb-num {
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .rev-box.rb-dark .rb-num { color: #fff; }
+    .rev-box.rb-light .rb-num { color: var(--ink); }
+    .rb-desc { font-size: 15px; line-height: 1.68; }
+    .rev-box.rb-dark .rb-desc { color: rgba(255,255,255,0.72); }
+    .rev-box.rb-light .rb-desc { color: var(--gray); }
+
+    /* ===== GROWTH STEPS ===== */
+    .growth-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .growth-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      background: var(--n50);
+    }
+    .growth-step-n {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .growth-step p { font-size: 15px; color: var(--gray); line-height: 1.65; }
+    .growth-note {
+      font-size: 14px;
+      color: var(--gray);
+      margin-top: 14px;
+      line-height: 1.65;
+    }
+
+    /* ===== SCENARIO NOTE ===== */
+    .scenario-note {
+      font-size: 13px;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.6;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-left: 3px solid rgba(225,211,255,0.25);
+    }
+
+    /* ===== COLLAB LABEL ===== */
+    .collab-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .collab-label::before {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    /* ===== PRINCIPLE CARDS ===== */
+    .principle-stack { display: flex; flex-direction: column; gap: 12px; }
+    .principle {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-left: 3px solid var(--purple);
+      padding: 18px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .principle-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      background: rgba(88,45,181,0.3);
+      border: 1px solid rgba(88,45,181,0.5);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple100);
+    }
+    .principle-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+    .principle-body { font-size: 14px; color: rgba(255,255,255,0.62); line-height: 1.65; }
+
+    /* ===== PRICING TOTAL BOX ===== */
+    .total-box {
+      background: var(--purple);
+      color: #fff;
+      padding: 28px 22px;
+    }
+    .total-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 6px;
+    }
+    .total-amount {
+      font-size: 40px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .total-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.14);
+      padding: 3px 8px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 16px;
+    }
+    .total-details { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .total-details li {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      gap: 7px;
+      line-height: 1.5;
+    }
+    .total-details li::before { content: '—'; color: var(--purple100); flex-shrink: 0; }
+
+    /* ===== CLOSING ===== */
+    #closing {
+      background: linear-gradient(155deg, var(--purple600) 0%, var(--purple700) 55%, var(--ink900) 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    #closing::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+    .closing-inner {
+      position: relative;
+      z-index: 1;
+      padding: 44px 20px 40px;
+    }
+    .closing-quote {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .closing-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 24px;
+      line-height: 1.68;
+    }
+    .closing-divider {
+      width: 36px;
+      height: 2px;
+      background: var(--purple100);
+      margin-bottom: 16px;
+    }
+    .closing-headline {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--purple100);
+      margin-bottom: 22px;
+    }
+
+    /* ===== NEXT STEPS ===== */
+    .nstep-stack { display: flex; flex-direction: column; gap: 12px; }
+    .nstep {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 22px 18px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .nstep-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--purple100);
+      color: var(--purple700);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .nstep-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .nstep-body { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.68; }
+
+    /* ===== FOOTER ===== */
+    .m-footer {
+      background: var(--ink900);
+      color: rgba(255,255,255,0.45);
+      padding: 32px 20px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.8;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .m-footer a {
+      color: var(--purple100);
+      text-decoration: none;
+    }
+    .m-footer-logo {
+      height: 18px;
+      width: auto;
+      margin: 0 auto 16px;
+      opacity: 0.55;
+    }
+    .desktop-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 11px 22px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* ===== UTILITY ===== */
+    .section-divider-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 28px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== STICKY NAV ===== -->
+<nav id="m-nav" role="navigation" aria-label="사이트 내비게이션">
+  <img id="m-nav-logo" src="../assets/img/skinseoul-wordmark-white.png" alt="SkinSeoul">
+  <button id="menu-btn" aria-label="섹션 메뉴 열기" aria-expanded="false" aria-controls="menu-sheet">
+    <i data-lucide="menu" width="22" height="22"></i>
+  </button>
+  <div id="m-progress" role="progressbar" aria-label="스크롤 진행"></div>
+</nav>
+
+<!-- ===== SECTION MENU SHEET ===== -->
+<div id="menu-sheet" role="dialog" aria-label="섹션 목록">
+  <ul>
+    <li><a href="#cover"     class="menu-link">커버</a></li>
+    <li><a href="#why"       class="menu-link">WHY SKINSEOUL</a></li>
+    <li><a href="#scope"     class="menu-link">1. 운영 범위</a></li>
+    <li><a href="#setup"     class="menu-link">2. 스토어 셋업</a></li>
+    <li><a href="#roadmap"   class="menu-link">3. 4개월 로드맵</a></li>
+    <li><a href="#revenue"   class="menu-link">4. 매출 목표</a></li>
+    <li><a href="#scenario"  class="menu-link">광고비 시나리오</a></li>
+    <li><a href="#reporting" class="menu-link">5. 리포팅 &amp; 협업</a></li>
+    <li><a href="#pricing"   class="menu-link">6. 제안 견적</a></li>
+    <li><a href="#closing"   class="menu-link">Next Steps</a></li>
+  </ul>
+</div>
+
+<!-- ===== COVER ===== -->
+<section id="cover" aria-label="커버">
+  <div class="cover-inner">
+    <img src="../assets/img/gb-logo-white.png" alt="Genabelle" class="cover-logo">
+    <div class="cover-overline">Growth &amp; Operations Partnership</div>
+    <h1 class="cover-title">
+      제나벨 Shopify D2C<br>
+      <span class="t2">성장 · 운영 대행 제안</span>
+    </h1>
+    <p class="cover-sub">글로벌 커머스를 매일 직접 운영하는 전문 운영사 스킨서울이, 제나벨의 미국 자사몰 성장을 실질적인 결과로 만들어 드립니다.</p>
+    <div class="cover-meta">
+      <div>
+        <div class="cover-meta-label">Prepared For</div>
+        <div class="cover-meta-val">제나벨 (Genabelle) · genabelle.com</div>
+      </div>
+      <div>
+        <div class="cover-meta-label">By</div>
+        <div class="cover-meta-val">SkinSeoul · admin@skin-seoul.com · skin-seoul.com</div>
+      </div>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-item">
+      <div class="stat-num">1억 원</div>
+      <div class="stat-desc">2026년 12월 월 매출 목표<br>(현재 대비 약 5배)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4개 영역</div>
+      <div class="stat-desc">스토어·SEO/GEO·데이터·전담 인력 일괄 운영</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">마크업 0</div>
+      <div class="stat-desc">광고비는 제나벨 직접 부담, 집행 수수료 없음</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY SKINSEOUL ===== -->
+<section id="why" class="m-section" aria-labelledby="why-h">
+  <div class="m-overline">Why SkinSeoul</div>
+  <h2 class="m-headline" id="why-h">단순한 대행사가 아닌, 매일 글로벌 크로스보더 커머스 &amp; 마케팅 실무를 수행하는 전문 운영사</h2>
+  <p class="m-lead">가장 먼저 강조드리고 싶은 점은, <strong>스킨서울은 단순한 대행사가 아니라 실무를 매일 같이 수행하는 전문 운영사</strong>라는 사실입니다. 성공적인 글로벌 커머스 운영 경험과 전문 인력을 바탕으로, 제나벨의 미국 자사몰에서 실질적인 결과물을 만들어 내는 데 매우 자신 있습니다.</p>
+  <div class="why-card-stack">
+    <div class="why-card">
+      <div class="why-card-n">01</div>
+      <div class="why-card-icon"><i data-lucide="briefcase" width="16" height="16"></i></div>
+      <div class="why-card-title">매일 실무를 수행하는 전문 운영사</div>
+      <div class="why-card-body">스킨서울은 전략만 제시하는 대행사가 아니라, 글로벌 K-뷰티 자사몰을 매일 직접 운영하며 매출을 키우는 전문 운영사입니다. 제나벨의 스토어를 '우리 스토어처럼' 손에 쥐고, 상품 등록부터 캠페인 집행·데이터 분석까지 한 손으로 운영합니다.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-card-n">02</div>
+      <div class="why-card-icon"><i data-lucide="globe" width="16" height="16"></i></div>
+      <div class="why-card-title">검증된 글로벌 커머스 운영 경험</div>
+      <div class="why-card-body">성공적인 글로벌 D2C·퍼포먼스 운영 경험을 바탕으로, 무엇이 전환을 만들고 무엇이 광고비를 태우는지 실전으로 검증된 플레이북을 보유하고 있습니다. 제나벨에는 처음부터 다시 배우는 비용 없이, 이미 검증된 운영 방식을 그대로 적용합니다.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-card-n">03</div>
+      <div class="why-card-icon"><i data-lucide="users" width="16" height="16"></i></div>
+      <div class="why-card-title">전문 인력 · 실질적 결과에 대한 자신감</div>
+      <div class="why-card-body">스토어 운영·퍼포먼스 광고·데이터·콘텐츠를 다루는 전문 인력이 한 팀으로 투입됩니다. '예쁜 보고서'가 아니라 트래픽·전환율·매출이라는 숫자로 증명합니다. 우리는 실질적인 결과를 만들어 내는 데 매우 자신 있습니다.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-card-n">04</div>
+      <div class="why-card-icon"><i data-lucide="zap" width="16" height="16"></i></div>
+      <div class="why-card-title">AI·AX를 가장 잘 활용하는 인하우스 테크팀</div>
+      <div class="why-card-body">AI와 AX(AI Transformation)를 실무에 가장 잘 녹여 쓰는 뛰어난 테크팀이 인하우스에서 직접 지원합니다. 데이터 분석·콘텐츠 생산·운영 자동화를 AI로 가속해, 같은 비용으로 더 빠르게·더 많이 실험하고, 더 정교하게 최적화합니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCOPE ===== -->
+<section id="scope" class="m-section m-section--dark" aria-labelledby="scope-h">
+  <div class="m-overline">1. Scope &amp; Strategy</div>
+  <h2 class="m-headline" id="scope-h">운영 범위 및 전략</h2>
+  <p class="m-lead">스토어 운영부터 검색·노출 최적화, 데이터 분석, 전담 인력 배치까지 — 매출을 움직이는 네 영역을 스킨서울이 한 팀으로 전담합니다. 각 영역은 따로 노는 업무가 아니라, 하나의 성장 엔진으로 맞물려 돌아갑니다.</p>
+  <div class="scope-stack">
+    <!-- a -->
+    <div class="scope-panel">
+      <div class="scope-ph">
+        <div class="scope-icon"><i data-lucide="shopping-bag" width="16" height="16"></i></div>
+        <div>
+          <div class="scope-tag">a</div>
+          <div class="scope-title">스토어 및 캠페인 관리</div>
+        </div>
+      </div>
+      <ul class="scope-list">
+        <li><strong>스토어 최적화:</strong> 상품 페이지(PDP) 구조·카피·비주얼 개선, 체크아웃 흐름과 전환율(CRO) 최적화</li>
+        <li><strong>운영:</strong> 머천다이징·컬렉션 큐레이션, 테마·앱 운영 등 스토어 일상 관리</li>
+        <li><strong>캠페인:</strong> 프로모션·시즌 캠페인 기획·집행, 퍼포먼스 광고(Meta·Google) 셋업·운영·최적화 (광고비 별도)</li>
+        <li><strong>객단가:</strong> 번들·세트 구성, 무료배송 임계값, 업셀·크로스셀 등 객단가(AOV) 상향 전략 실행</li>
+      </ul>
+    </div>
+    <!-- b -->
+    <div class="scope-panel">
+      <div class="scope-ph">
+        <div class="scope-icon"><i data-lucide="search" width="16" height="16"></i></div>
+        <div>
+          <div class="scope-tag">b</div>
+          <div class="scope-title">검색 및 노출 최적화 (SEO · GEO)</div>
+        </div>
+      </div>
+      <ul class="scope-list">
+        <li><strong>SEO (검색엔진 최적화):</strong> 상품·콘텐츠 키워드, 사이트 구조·메타데이터·속도를 최적화해 구글 검색 유입을 확대합니다.</li>
+        <li><strong>GEO (생성형 엔진 최적화):</strong> ChatGPT·Gemini 등 생성형 AI 검색의 답변에 제나벨 브랜드·제품이 인용·추천되도록 콘텐츠와 구조를 최적화합니다.</li>
+      </ul>
+      <div class="scope-note">※ 스킨서울 자체 채널을 통한 노출 운영은 본 제안 범위에 포함하지 않습니다. 검색·노출 최적화는 제나벨 자사몰의 SEO·GEO 강화에 집중합니다.</div>
+    </div>
+    <!-- c -->
+    <div class="scope-panel">
+      <div class="scope-ph">
+        <div class="scope-icon"><i data-lucide="bar-chart-2" width="16" height="16"></i></div>
+        <div>
+          <div class="scope-tag">c</div>
+          <div class="scope-title">데이터 분석</div>
+        </div>
+      </div>
+      <ul class="scope-list">
+        <li><strong>설치:</strong> 구글 애널리틱스(GA4) 및 전환·이벤트 트래커(Meta Pixel, Google Ads 태그 등) 설치·세팅</li>
+        <li><strong>퍼포먼스 리포팅:</strong> 트래픽·전환율·매출·ROAS 등 핵심 지표를 주기적으로 리포팅하고, 다음 그로스 액션을 제언합니다.</li>
+        <li><strong>의사결정:</strong> 유입 채널·랜딩·상품별 성과를 쪼개어, 어디에 예산을 더 넣고 어디를 멈출지 데이터로 결정합니다.</li>
+      </ul>
+    </div>
+    <!-- d -->
+    <div class="scope-panel">
+      <div class="scope-ph">
+        <div class="scope-icon"><i data-lucide="user-check" width="16" height="16"></i></div>
+        <div>
+          <div class="scope-tag">d</div>
+          <div class="scope-title">전담 인력 배치</div>
+        </div>
+      </div>
+      <ul class="scope-list">
+        <li><strong>카테고리 샵 매니저:</strong> 뷰티 카테고리를 이해하는 전담 매니저가 제나벨 스토어를 총괄 운영합니다.</li>
+        <li><strong>전담 인력:</strong> 운영·광고·데이터·콘텐츠 전문 인력이 한 팀으로 배정되어, 빠른 실행과 밀착 관리가 가능합니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SETUP ===== -->
+<section id="setup" class="m-section m-section--light" aria-labelledby="setup-h">
+  <div class="m-overline">2. Store Design &amp; Setup</div>
+  <h2 class="m-headline" id="setup-h">스토어 디자인 리뉴얼 &amp; 셋업 플랜</h2>
+  <p class="m-lead">미국 자사몰(genabelle.com)의 첫인상과 전환은 스토어 디자인·셋업에서 갈립니다. 본격 운영에 앞서, 셋업 단계(Week 1–2)에 '전환되는 구조'로 스토어를 다시 셋업합니다. 단순히 예쁘게 만드는 것이 아니라, 들어온 방문자를 구매로 바꾸는 구조를 설계합니다.</p>
+  <div class="tcard-list">
+    <div class="tcard">
+      <div class="tcard-label">디자인 리뉴얼</div>
+      <div class="tcard-value">홈·컬렉션·상품 상세 템플릿을 브랜드 톤에 맞춰 재디자인. 모바일 우선(Mobile-first) 레이아웃과 일관된 비주얼 시스템을 적용합니다.</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-label">상품 상세 (PDP)</div>
+      <div class="tcard-value">베네핏 중심 카피, 성분·임상·인증 등 신뢰 요소, 고품질 비주얼·영상, 리뷰·번들/옵션 UI로 구매 전환을 끌어올립니다.</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-label">전환 흐름 (CRO)</div>
+      <div class="tcard-value">장바구니 → 체크아웃 단계를 단축하고, 신뢰 배지·결제수단·무료배송 임계값을 노출해 이탈을 최소화합니다.</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-label">기술 셋업</div>
+      <div class="tcard-value">테마·필수 앱 구성, 사이트 속도 최적화, 도메인·트랜잭션 이메일·알림 세팅, 전 디바이스 반응형 QA를 진행합니다.</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-label">데이터 셋업</div>
+      <div class="tcard-value">GA4·Meta Pixel·Google Ads 태그와 전환 이벤트를 설치·검증합니다 — 운영 첫날부터 성과를 정확히 측정합니다.</div>
+    </div>
+  </div>
+  <p class="setup-note">위 작업은 운영 1개월차(셋업 단계, Week 1–2)에 집중 진행되며, 별도 셋업비 없이 운영비에 포함됩니다. 운영 중에도 데이터에 따라 디자인·전환 요소를 지속 개선합니다.</p>
+</section>
+
+<!-- Band image -->
+<div class="band-wrap" aria-hidden="true">
+  <img src="../assets/img/band_brand.jpg" alt="" class="band-img">
+  <span class="band-caption">GENABELLE · genabelle.com</span>
+</div>
+
+<!-- ===== ROADMAP ===== -->
+<section id="roadmap" class="m-section m-section--dark" aria-labelledby="roadmap-h">
+  <div class="m-overline">3. Execution Roadmap</div>
+  <h2 class="m-headline" id="roadmap-h">4개월 실행 로드맵</h2>
+  <p class="m-lead">4개월은 '기반을 다지고 → 본격 가동하고 → 검증된 구조 위에서 확장하고 → 성장을 가속·안정화'하는 단계로 설계합니다. 막연한 운영이 아니라, 단계별로 무엇을 언제 끝내는지가 분명합니다.</p>
+  <div class="phase-stack">
+    <div class="phase-card">
+      <div class="phase-n">Phase 0</div>
+      <div class="phase-name">셋업</div>
+      <div class="phase-time">Week 1–2 · 전환 기반 구축</div>
+      <ul class="phase-list">
+        <li>스토어 디자인·PDP·체크아웃 전환율(CRO) 1차 개선</li>
+        <li>GA4·Meta Pixel·Google Ads 태그 등 데이터 추적 환경 구축</li>
+        <li>기준 지표(베이스라인) 측정 및 광고 계정 셋업</li>
+      </ul>
+    </div>
+    <div class="phase-card p-active">
+      <div class="phase-n">Phase 1</div>
+      <div class="phase-name">런칭</div>
+      <div class="phase-time">Month 1 · 트래픽·전환 본격 가동</div>
+      <ul class="phase-list">
+        <li>퍼포먼스 광고(Meta·Google) 셋업·집행 시작, 초기 ROAS 검증</li>
+        <li>SEO·GEO 기초 작업 — 키워드·메타데이터·사이트 구조 최적화</li>
+        <li>주간 리포트 가동, 빠른 A/B 개선 사이클 시작</li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="phase-n">Phase 2</div>
+      <div class="phase-name">스케일</div>
+      <div class="phase-time">Month 2–3 · 검증된 구조 위 확장</div>
+      <ul class="phase-list">
+        <li>검증된 ROAS 기반 광고비 단계적 확대</li>
+        <li>전환율·객단가(AOV) 최적화, 시즌·프로모션 캠페인 운영</li>
+        <li>월간 성과 리뷰 + 다음 단계 성장 액션 제언</li>
+      </ul>
+    </div>
+    <div class="phase-card">
+      <div class="phase-n">Phase 3</div>
+      <div class="phase-name">가속</div>
+      <div class="phase-time">Month 4 · 성장 가속·안정화</div>
+      <ul class="phase-list">
+        <li>성과 데이터 기반 광고·소재·채널 믹스 고도화</li>
+        <li>베스트셀러·번들 중심 객단가 확대와 재구매 흐름 강화</li>
+        <li>4개월 성과 종합 리뷰 + 다음 분기 확장 로드맵 제언</li>
+      </ul>
+    </div>
+  </div>
+  <p class="roadmap-note">※ 일정은 협의에 따라 조정 가능하며, 각 단계 종료 시점에 성과를 함께 리뷰합니다.</p>
+</section>
+
+<!-- Band image -->
+<div class="band-wrap" aria-hidden="true">
+  <img src="../assets/img/band_lab.jpg" alt="" class="band-img">
+</div>
+
+<!-- ===== REVENUE ===== -->
+<section id="revenue" class="m-section" aria-labelledby="revenue-h">
+  <div class="m-overline">4. Target &amp; Growth</div>
+  <h2 class="m-headline" id="revenue-h">매출 목표 및 성장 계획</h2>
+  <div class="rev-stack">
+    <div class="rev-box rb-dark">
+      <div class="rb-label">2026년 12월 목표</div>
+      <div class="rb-sub">월 매출 2,000만 원 →</div>
+      <div class="rb-num">월 매출 1억 원</div>
+      <div class="rb-desc">현재 월 2,000만 원 기준, 올해 12월까지 월 매출 1억 원(약 5배) 달성을 목표로 합니다.</div>
+    </div>
+    <div class="rev-box rb-light">
+      <div class="rb-label">목표 달성 이후 · 추가 성장 여력</div>
+      <div class="rb-sub">공격적 투자 시</div>
+      <div class="rb-num">월 10억 원</div>
+      <div class="rb-desc">월 1억 달성 이후, 광고비를 월 2억 원 규모(ROAS 3.8~4.8 가정)로 확대하면 총 약 2.5억 투자로 월 매출 10억 원까지 확장할 수 있습니다.</div>
+    </div>
+  </div>
+  <h3 class="section-divider-label">성장 로드맵 — 단계적 확장 제언</h3>
+  <div class="growth-stack">
+    <div class="growth-step">
+      <div class="growth-step-n">①</div>
+      <p>셋업·최적화로 전환 기반을 다집니다.</p>
+    </div>
+    <div class="growth-step">
+      <div class="growth-step-n">②</div>
+      <p>퍼포먼스 광고를 본격 투입해 트래픽·매출을 끌어올립니다.</p>
+    </div>
+    <div class="growth-step">
+      <div class="growth-step-n">③</div>
+      <p>검증된 ROAS 위에서 광고비를 단계적으로 확대합니다.</p>
+    </div>
+  </div>
+  <p class="growth-note">이후에는 신제품 라인·신규 채널 확장 등으로 성장 여력을 추가로 제언드립니다.</p>
+</section>
+
+<!-- ===== SCENARIO ===== -->
+<section id="scenario" class="m-section m-section--dark" aria-labelledby="scenario-h">
+  <div class="m-overline">광고비 투입 시나리오</div>
+  <h2 class="m-headline" id="scenario-h">참고 시나리오 (추정)</h2>
+  <div class="tcard-list">
+    <div class="tcard tcard--dark">
+      <div class="tcard-label">보수</div>
+      <div class="tcard-value">
+        월 광고비 (제나벨 부담): <strong>5,000만 원</strong><br>
+        가정 ROAS: <strong>3.8x</strong><br>
+        기대 월 매출: <strong>월 2억 원 내외</strong>
+      </div>
+    </div>
+    <div class="tcard tcard--dark">
+      <div class="tcard-label">기본</div>
+      <div class="tcard-value">
+        월 광고비 (제나벨 부담): <strong>1억 원</strong><br>
+        가정 ROAS: <strong>4.0x</strong><br>
+        기대 월 매출: <strong>월 4억 원 내외</strong>
+      </div>
+    </div>
+    <div class="tcard tcard--dark">
+      <div class="tcard-label">공격</div>
+      <div class="tcard-value">
+        월 광고비 (제나벨 부담): <strong>2억 원</strong><br>
+        가정 ROAS: <strong>3.8–4.8x</strong><br>
+        기대 월 매출: <strong>월 8–10억 원</strong>
+      </div>
+    </div>
+  </div>
+  <div class="scenario-note">※ 위 수치는 ROAS 가정에 기반한 추정 시나리오이며, 실제 성과는 시장·소재·시즌에 따라 달라질 수 있습니다. 광고비는 제나벨이 직접 부담하며, 집행 대행 수수료(마크업)는 없습니다.</div>
+</section>
+
+<!-- Band image -->
+<div class="band-wrap" aria-hidden="true">
+  <img src="../assets/img/band_lineup.jpg" alt="" class="band-img">
+  <span class="band-caption">GENABELLE FORN LINE · 키워갈 제품 라인업</span>
+</div>
+
+<!-- ===== REPORTING ===== -->
+<section id="reporting" class="m-section m-section--dark" aria-labelledby="reporting-h">
+  <div class="m-overline">5. Reporting &amp; Collaboration</div>
+  <h2 class="m-headline" id="reporting-h">리포팅 및 협업 방식</h2>
+  <p class="m-lead">운영을 맡기고 깜깜이로 기다리는 일은 없습니다. 무엇을 하고 있고 숫자가 어떻게 움직이는지, 정해진 주기로 투명하게 공유합니다.</p>
+  <div class="tcard-list" style="margin-bottom:32px;">
+    <div class="tcard tcard--dark">
+      <div class="tcard-label">실시간</div>
+      <div class="tcard-value">전담 슬랙·메신저 채널 — 운영 이슈·의사결정 즉시 공유 / 상시</div>
+    </div>
+    <div class="tcard tcard--dark">
+      <div class="tcard-label">주간</div>
+      <div class="tcard-value">트래픽·전환율·매출·ROAS 핵심 지표 + 그 주의 액션·다음 주 계획 / 리포트</div>
+    </div>
+    <div class="tcard tcard--dark">
+      <div class="tcard-label">월간</div>
+      <div class="tcard-value">월 성과 종합 리뷰 + 개선 인사이트 + 다음 달 성장 로드맵 제언 / 리뷰 미팅</div>
+    </div>
+  </div>
+  <div class="collab-label">협업 원칙</div>
+  <div class="principle-stack">
+    <div class="principle">
+      <div class="principle-icon"><i data-lucide="split" width="16" height="16"></i></div>
+      <div>
+        <div class="principle-title">역할 분담</div>
+        <div class="principle-body">제나벨은 의사결정과 브랜드 방향에 집중하고, 실행·운영의 무게는 스킨서울이 가져갑니다.</div>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-icon"><i data-lucide="eye" width="16" height="16"></i></div>
+      <div>
+        <div class="principle-title">투명성</div>
+        <div class="principle-body">핵심 지표와 진행 상황을 숨기지 않고 공유합니다. 안 되는 것은 안 된다고, 데이터로 말씀드립니다.</div>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="principle-icon"><i data-lucide="zap" width="16" height="16"></i></div>
+      <div>
+        <div class="principle-title">속도</div>
+        <div class="principle-body">주간 단위로 빠르게 시도하고 측정하고 고칩니다. 한 달을 기다리지 않습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section id="pricing" class="m-section m-section--light" aria-labelledby="pricing-h">
+  <div class="m-overline">6. Investment</div>
+  <h2 class="m-headline" id="pricing-h">제안 견적</h2>
+  <p class="m-lead">4개월 운영 대행 패키지 기준입니다. 셋업 작업은 별도 비용 없이 운영비에 포함되며, 광고비는 별도(제나벨 직접 부담, 마크업 0)이고, 결제·물류 등 변동비는 실비 패스스루입니다.</p>
+  <div class="tcard-list" style="margin-bottom:20px;">
+    <div class="tcard">
+      <div class="tcard-label">셋업 · 1개월차 포함</div>
+      <div class="tcard-value">쇼피파이 스토어 디자인 개선 및 전환율(CR) 최적화 · 애널리틱스 및 각종 트래커 설치 — 데이터 추적 환경 구축 · (별도 셋업비 없이 운영비에 포함 — 운영 1개월차에 집중 진행)</div>
+      <div class="tcard-amount">운영비에 포함</div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-label">운영 대행 · 월</div>
+      <div class="tcard-value">스토어·캠페인 운영, 검색·노출 최적화(SEO·GEO), 데이터 분석·리포팅, 전담 인력 밀착 관리 일체 · (총 4개월 운영 · 분할 협의 가능)</div>
+      <div class="tcard-amount">₩5,000,000 / 월</div>
+    </div>
+  </div>
+  <div class="total-box">
+    <div class="total-title">총 견적 (4개월 기준)</div>
+    <div class="total-amount">₩20,000,000</div>
+    <div class="total-badge">마크업 없음</div>
+    <ul class="total-details">
+      <li>운영비 ₩20,000,000 (월 ₩5,000,000 × 4개월, 분할 협의 가능)</li>
+      <li>셋업 작업은 운영비에 포함, 별도 셋업비 없음</li>
+      <li>광고비는 제나벨 직접 부담</li>
+      <li>변동비(결제·물류) 실비 패스스루</li>
+      <li>4개월 이후 월 ₩5,000,000 기준 재계약</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== CLOSING ===== -->
+<section id="closing" aria-labelledby="closing-h">
+  <div class="closing-inner">
+    <div class="m-overline" style="color:var(--purple100);">Next Steps</div>
+    <div class="closing-quote">"보고서가 아니라, 실질적인 매출 결과로 증명하겠습니다."</div>
+    <div class="closing-sub">전체 흐름은 하나입니다 — 스킨서울이 제나벨의 성장을 끝까지 함께합니다.</div>
+    <div class="closing-divider"></div>
+    <div class="closing-headline" id="closing-h">지금 시작하면, 12월이 달라집니다.</div>
+    <div class="nstep-stack">
+      <div class="nstep">
+        <div class="nstep-num">1</div>
+        <div>
+          <div class="nstep-title">견적 확정 · 킥오프</div>
+          <div class="nstep-body">4개월 운영 대행 패키지로 바로 착수합니다. 킥오프에서 목표·우선순위·커뮤니케이션 채널을 정렬합니다.</div>
+        </div>
+      </div>
+      <div class="nstep">
+        <div class="nstep-num">2</div>
+        <div>
+          <div class="nstep-title">셋업 · 데이터 환경 구축</div>
+          <div class="nstep-body">스토어 디자인·CR 최적화와 애널리틱스·트래커 설치를 먼저 완료해 측정 기반을 만듭니다.</div>
+        </div>
+      </div>
+      <div class="nstep">
+        <div class="nstep-num">3</div>
+        <div>
+          <div class="nstep-title">운영 · 성과 리뷰</div>
+          <div class="nstep-body">스토어·캠페인 운영과 SEO·GEO를 가동하고, 주간 리포트와 월간 리뷰로 빠르게 최적화합니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="m-footer">
+  <img src="../assets/img/skinseoul-wordmark-white.png" alt="SkinSeoul" class="m-footer-logo">
+  SkinSeoul<br>
+  <a href="mailto:admin@skin-seoul.com">admin@skin-seoul.com</a> · <a href="https://skin-seoul.com" target="_blank" rel="noopener">skin-seoul.com</a>
+  <br>
+  <a href="../?v=d" class="desktop-link">데스크톱 버전으로 보기</a>
+</footer>
+
+<script>
+  // Init Lucide icons
+  lucide.createIcons();
+
+  // Section menu toggle
+  const menuBtn  = document.getElementById('menu-btn');
+  const menuSheet = document.getElementById('menu-sheet');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = menuSheet.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(isOpen));
+    menuBtn.setAttribute('aria-label', isOpen ? '섹션 메뉴 닫기' : '섹션 메뉴 열기');
+  });
+
+  // Close sheet when any link is tapped
+  document.querySelectorAll('.menu-link').forEach(link => {
+    link.addEventListener('click', () => {
+      menuSheet.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.setAttribute('aria-label', '섹션 메뉴 열기');
+    });
+  });
+
+  // Close sheet on outside tap
+  document.addEventListener('click', e => {
+    if (menuSheet.classList.contains('open') &&
+        !menuSheet.contains(e.target) &&
+        !menuBtn.contains(e.target)) {
+      menuSheet.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.setAttribute('aria-label', '섹션 메뉴 열기');
+    }
+  });
+
+  // Scroll progress bar
+  const progressBar = document.getElementById('m-progress');
+  function updateProgress() {
+    const scrollTop  = window.scrollY || document.documentElement.scrollTop;
+    const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+    progressBar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+</script>
+</body>
+</html>

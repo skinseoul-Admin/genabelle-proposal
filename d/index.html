@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>제나벨 × SkinSeoul — Shopify D2C 제안</title>
+  <link rel="stylesheet" href="../assets/tokens.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--ink900); font-family: var(--font); }
+
+    /* ===== STAGE WRAPPER ===== */
+    #stage-wrapper {
+      position: fixed;
+      inset: 0;
+      background: var(--ink900);
+      overflow: hidden;
+    }
+
+    /* ===== STAGE (1280×720) ===== */
+    #stage {
+      position: absolute;
+      width: 1280px;
+      height: 720px;
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    /* ===== SLIDE BASE ===== */
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .slide.is-active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ===== SHARED LAYOUT ===== */
+    .s-pad {
+      width: 1280px;
+      height: 720px;
+      padding: 42px 56px 38px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .s-overline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .s-overline::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .s-headline {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+    .s-lead {
+      font-size: 10.5px;
+      line-height: 1.65;
+      flex-shrink: 0;
+    }
+    .s-lead strong { font-weight: 600; }
+
+    /* ===== SLIDE 1: COVER ===== */
+    .s-cover {
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple700) 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    .s-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+    }
+    .cover-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 56px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cover-top-label {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--purple100);
+    }
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 56px;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-overline {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .cover-overline::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .cover-title {
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.08;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .cover-title span { display: block; }
+    .cover-title .t2 { color: var(--purple100); }
+    .cover-sub {
+      font-size: 12px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.8);
+      max-width: 620px;
+      margin-bottom: 22px;
+    }
+    .cover-meta {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .cover-meta-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.8);
+    }
+    .cover-meta-row strong {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--purple100);
+    }
+    .cover-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.18);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-stat {
+      padding: 14px 24px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .cover-stat:last-child { border-right: none; }
+    .cover-stat-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .cover-stat-desc {
+      font-size: 9px;
+      color: var(--purple100);
+      line-height: 1.4;
+    }
+
+    /* ===== SLIDE 2: WHY ===== */
+    .s-why { background: #fff; }
+    .s-why .s-overline { color: var(--purple); }
+    .why-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+    }
+    .why-card {
+      border-top: 2px solid var(--purple);
+      padding: 14px;
+      background: var(--n50);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow: hidden;
+    }
+    .why-card-n {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple);
+    }
+    .why-card-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--purple50);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple);
+      flex-shrink: 0;
+    }
+    .why-card-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .why-card-body {
+      font-size: 9.5px;
+      line-height: 1.58;
+      color: var(--gray);
+    }
+
+    /* ===== DARK SLIDE BASE ===== */
+    .s-dark {
+      background: var(--ink900);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .s-dark .s-overline { color: var(--purple100); }
+    .s-dark .s-headline { color: #fff; }
+    .s-dark .s-lead { color: rgba(255,255,255,0.62); }
+    .s-dark .s-lead strong { color: #fff; }
+    .s-dark::after {
+      content: attr(data-num);
+      position: absolute;
+      right: -8px;
+      top: -16px;
+      font-size: 16rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.03);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ===== SCOPE PANELS ===== */
+    .scope-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+    }
+    .scope-panel {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-top: 2px solid var(--purple);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .scope-ph {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+    .scope-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      background: var(--purple);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .scope-tag {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 2px;
+    }
+    .scope-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .scope-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .scope-list li {
+      font-size: 9.5px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.65);
+      padding-left: 10px;
+      position: relative;
+    }
+    .scope-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.52em;
+      width: 3px;
+      height: 3px;
+      background: var(--purple100);
+      border-radius: 50%;
+    }
+    .scope-list li strong { color: #fff; font-weight: 600; }
+    .scope-note {
+      margin-top: 8px;
+      padding: 6px 8px;
+      border-left: 2px solid rgba(225,211,255,0.3);
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.38);
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+
+    /* ===== SLIDE 5: SETUP ===== */
+    .s-setup { background: var(--n50); }
+    .s-setup .s-overline { color: var(--purple); }
+    .setup-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .setup-left { display: flex; flex-direction: column; overflow: hidden; }
+    .setup-img-col {
+      position: relative;
+      overflow: hidden;
+      border-radius: 2px;
+    }
+    .setup-img-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .setup-img-col::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(8,2,22,0.42);
+    }
+    .setup-img-caption {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      z-index: 1;
+    }
+
+    /* ===== COMPACT TABLE ===== */
+    .ctable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+    }
+    .ctable th {
+      background: var(--purple);
+      color: #fff;
+      text-align: left;
+      padding: 6px 10px;
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .ctable td {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+    .ctable tr:last-child td { border-bottom: none; }
+    .ctable td:first-child {
+      font-weight: 700;
+      color: var(--purple600);
+      width: 20%;
+      white-space: nowrap;
+    }
+    .ctable tbody tr { background: #fff; }
+    .ctable tbody tr:nth-child(even) { background: #f8f7fc; }
+    .setup-note {
+      font-size: 8.5px;
+      color: var(--gray400);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    /* ===== SLIDE 6: ROADMAP ===== */
+    .s-roadmap { position: relative; color: #fff; }
+    .roadmap-bgimg {
+      position: absolute;
+      inset: 0;
+    }
+    .roadmap-bgimg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .roadmap-bgimg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(7,1,20,0.91);
+    }
+    .roadmap-inner {
+      position: relative;
+      z-index: 1;
+      padding: 42px 56px 38px;
+      height: 720px;
+      display: flex;
+      flex-direction: column;
+    }
+    .roadmap-inner .s-overline { color: var(--purple100); }
+    .roadmap-inner .s-headline { color: #fff; }
+    .roadmap-inner .s-lead { color: rgba(255,255,255,0.62); }
+    .phases-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+    }
+    .phase-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .phase-card.p-active {
+      border-top: 2px solid var(--purple100);
+      background: rgba(88,45,181,0.22);
+    }
+    .phase-n {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 3px;
+      flex-shrink: 0;
+    }
+    .phase-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+      flex-shrink: 0;
+    }
+    .phase-time {
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    .phase-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      overflow: hidden;
+    }
+    .phase-list li {
+      font-size: 9px;
+      color: rgba(255,255,255,0.62);
+      line-height: 1.45;
+      padding-left: 9px;
+      position: relative;
+    }
+    .phase-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--purple100);
+    }
+    .roadmap-note {
+      margin-top: 8px;
+      font-size: 8px;
+      color: rgba(255,255,255,0.32);
+      flex-shrink: 0;
+    }
+
+    /* ===== SLIDE 7: REVENUE ===== */
+    .s-rev { background: #fff; }
+    .s-rev .s-overline { color: var(--purple); }
+    .rev-boxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+    }
+    .rev-box { padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
+    .rev-box.rb-dark { background: var(--purple); }
+    .rev-box.rb-light { background: var(--n50); border: 2px solid var(--border); }
+    .rb-label {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+    .rev-box.rb-dark .rb-label { color: var(--purple100); }
+    .rev-box.rb-light .rb-label { color: var(--purple); }
+    .rb-sub { font-size: 10px; margin-bottom: 3px; flex-shrink: 0; }
+    .rev-box.rb-dark .rb-sub { color: rgba(255,255,255,0.65); }
+    .rev-box.rb-light .rb-sub { color: var(--gray); }
+    .rb-num { font-size: 34px; font-weight: 700; line-height: 1; margin-bottom: 8px; flex-shrink: 0; }
+    .rev-box.rb-dark .rb-num { color: #fff; }
+    .rev-box.rb-light .rb-num { color: var(--ink); }
+    .rb-desc { font-size: 9.5px; line-height: 1.55; flex: 1; overflow: hidden; }
+    .rev-box.rb-dark .rb-desc { color: rgba(255,255,255,0.72); }
+    .rev-box.rb-light .rb-desc { color: var(--gray); }
+    .growth-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+      flex-shrink: 0;
+    }
+    .growth-step {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: var(--n50);
+    }
+    .growth-step-n {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+    .growth-step p { font-size: 8.5px; color: var(--gray); line-height: 1.5; }
+
+    /* ===== SLIDE 8: SCENARIO ===== */
+    .s-scenario { background: var(--ink900); color: #fff; }
+    .s-scenario .s-overline { color: var(--purple100); }
+    .s-scenario .s-headline { color: #fff; }
+    .s-scenario .s-lead { color: rgba(255,255,255,0.62); }
+    .scenario-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .scenario-left { display: flex; flex-direction: column; }
+
+    /* ===== DARK TABLE ===== */
+    .dtable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+    }
+    .dtable th {
+      background: var(--purple);
+      color: #fff;
+      padding: 7px 10px;
+      text-align: left;
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .dtable td {
+      padding: 9px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.72);
+      vertical-align: top;
+      line-height: 1.55;
+    }
+    .dtable tr:last-child td { border-bottom: none; }
+    .dtable td:first-child {
+      color: var(--purple100);
+      font-weight: 700;
+    }
+    .scenario-note {
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.36);
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+    .band-col {
+      position: relative;
+      overflow: hidden;
+    }
+    .band-col img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .band-col::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(8,2,22,0.5);
+    }
+    .band-col-cap {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      z-index: 1;
+    }
+
+    /* ===== SLIDE 9: REPORTING ===== */
+    .s-report { background: var(--ink900); color: #fff; }
+    .s-report .s-overline { color: var(--purple100); }
+    .s-report .s-headline { color: #fff; }
+    .s-report .s-lead { color: rgba(255,255,255,0.62); }
+    .report-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+      margin-top: 12px;
+      min-height: 0;
+      align-items: start;
+    }
+    .collab-label {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .collab-label::before {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 2px;
+      background: currentColor;
+    }
+    .collab-list { display: flex; flex-direction: column; gap: 10px; }
+    .principle { display: flex; gap: 10px; align-items: flex-start; }
+    .principle-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      background: rgba(88,45,181,0.3);
+      border: 1px solid rgba(88,45,181,0.5);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple100);
+    }
+    .principle-title { font-size: 10.5px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .principle-body { font-size: 9px; color: rgba(255,255,255,0.55); line-height: 1.55; }
+
+    /* ===== SLIDE 10: PRICING ===== */
+    .s-pricing { background: var(--n50); }
+    .s-pricing .s-overline { color: var(--purple); }
+    .pricing-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+      min-height: 0;
+    }
+    .total-box {
+      background: var(--purple);
+      color: #fff;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .total-title {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 4px;
+    }
+    .total-amount { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .total-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.14);
+      padding: 2px 7px;
+      font-size: 6.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple100);
+      margin-bottom: 7px;
+    }
+    .total-details { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+    .total-details li {
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      gap: 5px;
+    }
+    .total-details li::before { content: '—'; color: var(--purple100); flex-shrink: 0; }
+    .total-cta { text-align: center; flex-shrink: 0; }
+    .total-cta-hint { font-size: 8.5px; color: var(--purple100); margin-bottom: 7px; display: block; }
+    .btn-white {
+      display: inline-block;
+      background: #fff;
+      color: var(--purple700);
+      font-family: var(--font);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 7px 16px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* ===== SLIDE 11: CLOSING ===== */
+    .s-closing {
+      background: linear-gradient(135deg, var(--purple600) 0%, var(--purple700) 55%, var(--ink900) 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .s-closing::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+    }
+    .closing-pad {
+      position: relative;
+      z-index: 1;
+      width: 1280px;
+      height: 720px;
+      padding: 42px 56px 38px;
+      display: flex;
+      flex-direction: column;
+    }
+    .closing-quote {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #fff;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+    .closing-sub {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.62);
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .closing-divider {
+      width: 36px;
+      height: 2px;
+      background: var(--purple100);
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    .closing-headline {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--purple100);
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+    .next-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      flex: 1;
+      min-height: 0;
+    }
+    .nstep {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .nstep-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--purple100);
+      color: var(--purple700);
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+    .nstep-title { font-size: 11.5px; font-weight: 700; color: #fff; margin-bottom: 5px; flex-shrink: 0; }
+    .nstep-body { font-size: 9px; color: rgba(255,255,255,0.62); line-height: 1.6; }
+    .closing-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.14);
+      margin-top: 12px;
+      flex-shrink: 0;
+    }
+    .closing-footer-contact { font-size: 8.5px; color: rgba(255,255,255,0.42); }
+
+    /* ===== NAVIGATION (outside stage) ===== */
+    #nav-prev, #nav-next {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 500;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    #nav-prev:hover, #nav-next:hover { background: rgba(255,255,255,0.18); }
+    #nav-prev:disabled, #nav-next:disabled { opacity: 0.25; cursor: default; pointer-events: none; }
+    #nav-prev { left: 10px; }
+    #nav-next { right: 10px; }
+
+    #nav-pills {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 4px;
+      z-index: 500;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: calc(100vw - 100px);
+    }
+    .pill {
+      width: 26px;
+      height: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.55);
+      font-family: var(--font);
+      font-size: 8.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, color 0.18s;
+    }
+    .pill:hover { background: rgba(255,255,255,0.18); color: #fff; }
+    .pill.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+    #slide-counter {
+      position: fixed;
+      top: 10px;
+      right: 12px;
+      z-index: 500;
+      font-size: 10px;
+      font-family: var(--font);
+      font-weight: 700;
+      color: rgba(255,255,255,0.42);
+      letter-spacing: 0.08em;
+    }
+
+    /* =====================================================
+       VERTICAL BALANCE PATCH — fill 1280×720 on every slide
+    ===================================================== */
+
+    /* Global: scale up base type */
+    .s-headline { font-size: 28px; }
+    .s-lead { font-size: 12.5px; }
+
+    /* Cover: taller stat bar */
+    .cover-stat { padding: 18px 24px; }
+    .cover-stat-num { font-size: 26px; }
+    .cover-stat-desc { font-size: 10px; }
+
+    /* S2: WHY — bigger, airy cards */
+    .why-card { padding: 24px 20px; gap: 14px; }
+    .why-card-icon { width: 34px; height: 34px; }
+    .why-card-n { font-size: 9px; }
+    .why-card-title { font-size: 14px; }
+    .why-card-body { font-size: 11.5px; line-height: 1.68; }
+
+    /* S3+S4: Scope — spread bullets to fill panel height */
+    .scope-panel { padding: 26px 24px; }
+    .scope-icon { width: 34px; height: 34px; }
+    .scope-title { font-size: 16px; }
+    .scope-ph { margin-bottom: 18px; }
+    .scope-list { justify-content: space-evenly; gap: 0; }
+    .scope-list li {
+      font-size: 12.5px;
+      line-height: 1.62;
+      padding: 10px 0 10px 16px;
+    }
+    .scope-list li::before { top: 1.1em; }
+    .scope-note {
+      font-size: 10.5px;
+      padding: 10px 14px;
+      margin-top: 14px;
+    }
+
+    /* S5: Setup — taller table rows */
+    .ctable { font-size: 11.5px; }
+    .ctable th { padding: 10px 12px; font-size: 9px; }
+    .ctable td { padding: 14px 12px; }
+    .setup-note { font-size: 10.5px; margin-top: 12px; }
+
+    /* S6: Roadmap — already good; small boosts */
+    .phase-name { font-size: 19px; }
+    .phase-list li { font-size: 10.5px; line-height: 1.5; }
+    .phase-list { gap: 6px; }
+
+    /* S7: Revenue — huge numbers, fill boxes */
+    .rev-box { padding: 34px 30px; }
+    .rb-label { font-size: 9.5px; margin-bottom: 16px; }
+    .rb-sub { font-size: 12.5px; margin-bottom: 8px; }
+    .rb-num { font-size: 54px; margin-bottom: 18px; }
+    .rb-desc { font-size: 13px; line-height: 1.68; }
+    .growth-row { margin-top: 18px; gap: 12px; }
+    .growth-step { padding: 16px 18px; }
+    .growth-step p { font-size: 11.5px; line-height: 1.58; }
+    .growth-step-n { width: 22px; height: 22px; font-size: 10px; margin-bottom: 8px; }
+
+    /* S8: Scenario — bigger rows; center left col vertically */
+    .dtable { font-size: 12.5px; }
+    .dtable th { padding: 11px 12px; font-size: 9px; }
+    .dtable td { padding: 22px 12px; }
+    .scenario-note { font-size: 10.5px; margin-top: 16px; }
+    .scenario-left { justify-content: center; }
+
+    /* S9: Reporting — KEY structural fix */
+    /* Both columns stretch to grid row height */
+    .report-layout { align-items: stretch; }
+    /* Make each column a flex column so children can grow */
+    .report-layout > div { display: flex; flex-direction: column; }
+    /* Left col: center table vertically */
+    .report-layout > div:first-child { justify-content: center; }
+    /* Right col: make collab-list fill remaining space */
+    .collab-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    /* Bigger rows for reporting table on this slide */
+    .s-report .dtable td { padding: 28px 12px; }
+    /* Principle items become growing cards */
+    .principle {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-left: 2px solid var(--purple);
+      padding: 18px 20px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .principle-icon { width: 32px; height: 32px; flex-shrink: 0; }
+    .principle-title { font-size: 14px; margin-bottom: 6px; }
+    .principle-body { font-size: 11.5px; line-height: 1.62; }
+
+    /* S10: Pricing — let total-box grow to fill remaining */
+    .total-box { flex: 1 1 auto; padding: 24px 26px; }
+    .total-amount { font-size: 38px; }
+    .total-title { font-size: 9px; margin-bottom: 7px; }
+    .total-badge { font-size: 8px; margin-bottom: 12px; }
+    .total-details { gap: 7px; }
+    .total-details li { font-size: 11px; }
+    .total-cta-hint { font-size: 10.5px; margin-bottom: 12px; }
+    .btn-white { font-size: 12.5px; padding: 11px 22px; }
+
+    /* S11: Closing — bigger type, fuller next-step cards */
+    .closing-quote { font-size: 34px; margin-bottom: 10px; }
+    .closing-sub { font-size: 13.5px; margin-bottom: 18px; }
+    .closing-divider { margin-bottom: 14px; width: 40px; }
+    .closing-headline { font-size: 25px; margin-bottom: 22px; }
+    .nstep { padding: 24px 22px; }
+    .nstep-num { width: 34px; height: 34px; font-size: 16px; margin-bottom: 14px; }
+    .nstep-title { font-size: 17px; margin-bottom: 10px; }
+    .nstep-body { font-size: 12px; line-height: 1.68; }
+    .closing-footer { margin-top: 16px; padding-top: 14px; }
+
+    /* ===== FIX: keep every slide root absolutely overlaid (section classes
+       like .s-dark/.s-roadmap/.s-closing must not break the opacity overlay) ===== */
+    #stage > .slide { position: absolute !important; inset: 0 !important; }
+  </style>
+</head>
+<body>
+
+<div id="stage-wrapper">
+  <div id="stage">
+
+    <!-- ===================== SLIDE 1: COVER ===================== -->
+    <div class="slide s-cover is-active" id="s1">
+      <div class="cover-topbar">
+        <img src="../assets/img/skinseoul-wordmark-white.png" alt="SkinSeoul" style="height:22px;">
+        <div class="cover-topbar-right">
+          <span class="cover-top-label">Prepared for</span>
+          <img src="../assets/img/gb-logo-white.png" alt="Genabelle" style="height:18px;">
+        </div>
+      </div>
+      <div class="cover-body">
+        <div class="cover-overline">Growth &amp; Operations Partnership</div>
+        <h1 class="cover-title">
+          <span>제나벨 Shopify D2C</span>
+          <span class="t2">성장 · 운영 대행 제안</span>
+        </h1>
+        <p class="cover-sub">글로벌 커머스를 매일 직접 운영하는 전문 운영사 스킨서울이, 제나벨의 미국 자사몰 성장을 실질적인 결과로 만들어 드립니다.</p>
+        <div class="cover-meta">
+          <div class="cover-meta-row"><strong>Prepared for</strong><span>제나벨 (Genabelle) · genabelle.com</span></div>
+          <div class="cover-meta-row"><strong>By</strong><span>SkinSeoul · admin@skin-seoul.com · skin-seoul.com</span></div>
+        </div>
+      </div>
+      <div class="cover-stats">
+        <div class="cover-stat">
+          <div class="cover-stat-num">1억 원</div>
+          <div class="cover-stat-desc">2026년 12월 월 매출 목표 (현재 대비 약 5배)</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">4개 영역</div>
+          <div class="cover-stat-desc">스토어·SEO/GEO·데이터·전담 인력 일괄 운영</div>
+        </div>
+        <div class="cover-stat">
+          <div class="cover-stat-num">마크업 0</div>
+          <div class="cover-stat-desc">광고비는 제나벨 직접 부담 · 집행 수수료 없음</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 2: WHY ===================== -->
+    <div class="slide s-why" id="s2">
+      <div class="s-pad">
+        <div class="s-overline">Why SkinSeoul</div>
+        <h2 class="s-headline" style="margin-top:10px;">단순한 대행사가 아닌, 매일 글로벌 크로스보더 커머스 &amp; 마케팅 실무를 수행하는 전문 운영사</h2>
+        <p class="s-lead" style="color:var(--gray);margin-top:7px;">가장 먼저 강조드리고 싶은 점은, <strong>스킨서울은 단순한 대행사가 아니라 실무를 매일 같이 수행하는 전문 운영사</strong>라는 사실입니다. 성공적인 글로벌 커머스 운영 경험과 전문 인력을 바탕으로, 제나벨의 미국 자사몰에서 실질적인 결과물을 만들어 내는 데 매우 자신 있습니다.</p>
+        <div class="why-cards">
+          <div class="why-card">
+            <div class="why-card-n">01</div>
+            <div class="why-card-icon"><i data-lucide="store" style="width:13px;height:13px;"></i></div>
+            <div class="why-card-title">매일 실무를 수행하는 전문 운영사</div>
+            <p class="why-card-body">스킨서울은 전략만 제시하는 대행사가 아니라, 글로벌 K-뷰티 자사몰을 매일 직접 운영하며 매출을 키우는 전문 운영사입니다. 제나벨의 스토어를 '우리 스토어처럼' 손에 쥐고, 상품 등록부터 캠페인 집행·데이터 분석까지 한 손으로 운영합니다.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-n">02</div>
+            <div class="why-card-icon"><i data-lucide="shield-check" style="width:13px;height:13px;"></i></div>
+            <div class="why-card-title">검증된 글로벌 커머스 운영 경험</div>
+            <p class="why-card-body">성공적인 글로벌 D2C·퍼포먼스 운영 경험을 바탕으로, 무엇이 전환을 만들고 무엇이 광고비를 태우는지 실전으로 검증된 플레이북을 보유하고 있습니다. 제나벨에는 처음부터 다시 배우는 비용 없이, 이미 검증된 운영 방식을 그대로 적용합니다.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-n">03</div>
+            <div class="why-card-icon"><i data-lucide="trending-up" style="width:13px;height:13px;"></i></div>
+            <div class="why-card-title">전문 인력 · 실질적 결과에 대한 자신감</div>
+            <p class="why-card-body">스토어 운영·퍼포먼스 광고·데이터·콘텐츠를 다루는 전문 인력이 한 팀으로 투입됩니다. '예쁜 보고서'가 아니라 트래픽·전환율·매출이라는 숫자로 증명합니다. 우리는 실질적인 결과를 만들어 내는 데 매우 자신 있습니다.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-card-n">04</div>
+            <div class="why-card-icon"><i data-lucide="zap" style="width:13px;height:13px;"></i></div>
+            <div class="why-card-title">AI·AX를 가장 잘 활용하는 인하우스 테크팀</div>
+            <p class="why-card-body">AI와 AX(AI Transformation)를 실무에 가장 잘 녹여 쓰는 뛰어난 테크팀이 인하우스에서 직접 지원합니다. 데이터 분석·콘텐츠 생산·운영 자동화를 AI로 가속해, 같은 비용으로 더 빠르게·더 많이 실험하고, 더 정교하게 최적화합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 3: SCOPE (a+b) ===================== -->
+    <div class="slide s-dark" id="s3" data-num="01">
+      <div class="s-pad">
+        <div class="s-overline">01 · Scope &amp; Strategy · 운영 범위 (1/2)</div>
+        <h2 class="s-headline" style="margin-top:10px;">스토어 운영부터 검색·노출 최적화, 데이터 분석, 전담 인력 배치까지</h2>
+        <p class="s-lead" style="margin-top:7px;">매출을 움직이는 네 영역을 스킨서울이 한 팀으로 전담합니다. 각 영역은 따로 노는 업무가 아니라, 하나의 성장 엔진으로 맞물려 돌아갑니다.</p>
+        <div class="scope-grid">
+          <div class="scope-panel">
+            <div class="scope-ph">
+              <div class="scope-icon"><i data-lucide="shopping-bag" style="width:13px;height:13px;"></i></div>
+              <div>
+                <div class="scope-tag">A</div>
+                <div class="scope-title">스토어 및 캠페인 관리</div>
+              </div>
+            </div>
+            <ul class="scope-list">
+              <li><strong>스토어 최적화</strong> — 상품 페이지(PDP) 구조·카피·비주얼 개선, 체크아웃 흐름과 전환율(CRO) 최적화</li>
+              <li><strong>운영</strong> — 머천다이징·컬렉션 큐레이션, 테마·앱 운영 등 스토어 일상 관리</li>
+              <li><strong>캠페인</strong> — 프로모션·시즌 캠페인 기획·집행, 퍼포먼스 광고(Meta·Google) 셋업·운영·최적화 (광고비 별도)</li>
+              <li><strong>객단가</strong> — 번들·세트 구성, 무료배송 임계값, 업셀·크로스셀 등 객단가(AOV) 상향 전략 실행</li>
+            </ul>
+          </div>
+          <div class="scope-panel">
+            <div class="scope-ph">
+              <div class="scope-icon"><i data-lucide="search" style="width:13px;height:13px;"></i></div>
+              <div>
+                <div class="scope-tag">B</div>
+                <div class="scope-title">검색 및 노출 최적화 (SEO · GEO)</div>
+              </div>
+            </div>
+            <ul class="scope-list">
+              <li><strong>SEO (검색엔진 최적화)</strong> — 상품·콘텐츠 키워드, 사이트 구조·메타데이터·속도를 최적화해 구글 검색 유입을 확대합니다.</li>
+              <li><strong>GEO (생성형 엔진 최적화)</strong> — ChatGPT·Gemini 등 생성형 AI 검색의 답변에 제나벨 브랜드·제품이 인용·추천되도록 콘텐츠와 구조를 최적화합니다.</li>
+            </ul>
+            <div class="scope-note">범위 안내: 스킨서울 자체 채널을 통한 노출 운영은 본 제안 범위에 포함하지 않습니다. 검색·노출 최적화는 제나벨 자사몰의 SEO·GEO 강화에 집중합니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 4: SCOPE (c+d) ===================== -->
+    <div class="slide s-dark" id="s4" data-num="01">
+      <div class="s-pad">
+        <div class="s-overline">01 · Scope &amp; Strategy · 운영 범위 (2/2)</div>
+        <h2 class="s-headline" style="margin-top:10px;">데이터 분석과 전담 인력으로 완성하는 운영 체계</h2>
+        <p class="s-lead" style="margin-top:7px;">측정되지 않으면 개선할 수 없습니다. 데이터 추적 환경을 갖추고, 전담 팀이 밀착해 운영합니다.</p>
+        <div class="scope-grid">
+          <div class="scope-panel">
+            <div class="scope-ph">
+              <div class="scope-icon"><i data-lucide="bar-chart-2" style="width:13px;height:13px;"></i></div>
+              <div>
+                <div class="scope-tag">C</div>
+                <div class="scope-title">데이터 분석</div>
+              </div>
+            </div>
+            <ul class="scope-list">
+              <li><strong>설치</strong> — 구글 애널리틱스(GA4) 및 전환·이벤트 트래커(Meta Pixel, Google Ads 태그 등) 설치·세팅</li>
+              <li><strong>퍼포먼스 리포팅</strong> — 트래픽·전환율·매출·ROAS 등 핵심 지표를 주기적으로 리포팅하고, 다음 그로스 액션을 제언합니다.</li>
+              <li><strong>의사결정</strong> — 유입 채널·랜딩·상품별 성과를 쪼개어, 어디에 예산을 더 넣고 어디를 멈출지 데이터로 결정합니다.</li>
+            </ul>
+          </div>
+          <div class="scope-panel">
+            <div class="scope-ph">
+              <div class="scope-icon"><i data-lucide="users" style="width:13px;height:13px;"></i></div>
+              <div>
+                <div class="scope-tag">D</div>
+                <div class="scope-title">전담 인력 배치</div>
+              </div>
+            </div>
+            <ul class="scope-list">
+              <li><strong>카테고리 샵 매니저</strong> — 뷰티 카테고리를 이해하는 전담 매니저가 제나벨 스토어를 총괄 운영합니다.</li>
+              <li><strong>전담 인력</strong> — 운영·광고·데이터·콘텐츠 전문 인력이 한 팀으로 배정되어, 빠른 실행과 밀착 관리가 가능합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 5: STORE SETUP ===================== -->
+    <div class="slide s-setup" id="s5">
+      <div class="s-pad">
+        <div class="s-overline">02 · Store Design &amp; Setup</div>
+        <h2 class="s-headline" style="margin-top:10px;">스토어 디자인 리뉴얼 &amp; 셋업 플랜</h2>
+        <p class="s-lead" style="color:var(--gray);margin-top:7px;">단순히 예쁘게 만드는 것이 아니라, 들어온 방문자를 구매로 바꾸는 구조를 설계합니다.</p>
+        <div class="setup-layout">
+          <div class="setup-left">
+            <table class="ctable">
+              <thead>
+                <tr><th>영역</th><th>작업 내용</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>디자인 리뉴얼</td>
+                  <td>홈·컬렉션·상품 상세 템플릿을 브랜드 톤에 맞춰 재디자인. 모바일 우선(Mobile-first) 레이아웃과 일관된 비주얼 시스템 적용.</td>
+                </tr>
+                <tr>
+                  <td>상품 상세 (PDP)</td>
+                  <td>베네핏 중심 카피, 성분·임상·인증 등 신뢰 요소, 고품질 비주얼·영상, 리뷰·번들/옵션 UI로 구매 전환 향상.</td>
+                </tr>
+                <tr>
+                  <td>전환 흐름 (CRO)</td>
+                  <td>장바구니 → 체크아웃 단계를 단축하고, 신뢰 배지·결제수단·무료배송 임계값을 노출해 이탈을 최소화합니다.</td>
+                </tr>
+                <tr>
+                  <td>기술 셋업</td>
+                  <td>테마·필수 앱 구성, 사이트 속도 최적화, 도메인·트랜잭션 이메일·알림 세팅, 전 디바이스 반응형 QA 진행.</td>
+                </tr>
+                <tr>
+                  <td>데이터 셋업</td>
+                  <td>GA4·Meta Pixel·Google Ads 태그와 전환 이벤트를 설치·검증합니다 — 운영 첫날부터 성과를 정확히 측정.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="setup-note">운영 1개월차(Week 1–2)에 집중 진행, 별도 셋업비 없이 운영비에 포함됩니다. 운영 중에도 데이터에 따라 디자인·전환 요소를 지속 개선합니다.</p>
+          </div>
+          <div class="setup-img-col">
+            <img src="../assets/img/band_brand.jpg" alt="">
+            <span class="setup-img-caption">GENABELLE · genabelle.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 6: ROADMAP ===================== -->
+    <div class="slide s-roadmap" id="s6">
+      <div class="roadmap-bgimg">
+        <img src="../assets/img/band_lab.jpg" alt="">
+      </div>
+      <div class="roadmap-inner">
+        <div class="s-overline">03 · Execution Roadmap</div>
+        <h2 class="s-headline" style="margin-top:10px;">4개월 실행 로드맵</h2>
+        <p class="s-lead" style="margin-top:7px;">기반을 다지고 → 본격 가동하고 → 검증된 구조 위에서 확장하고 → 성장을 가속·안정화하는 4단계.</p>
+        <div class="phases-row">
+          <div class="phase-card p-active">
+            <div class="phase-n">Phase 0</div>
+            <div class="phase-name">셋업</div>
+            <div class="phase-time">Week 1–2 · 전환 기반 구축</div>
+            <ul class="phase-list">
+              <li>스토어 디자인·PDP·체크아웃 전환율(CRO) 1차 개선</li>
+              <li>GA4·Meta Pixel·Google Ads 태그 등 데이터 추적 환경 구축</li>
+              <li>기준 지표(베이스라인) 측정 및 광고 계정 셋업</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-n">Phase 1</div>
+            <div class="phase-name">런칭</div>
+            <div class="phase-time">Month 1 · 트래픽·전환 본격 가동</div>
+            <ul class="phase-list">
+              <li>퍼포먼스 광고(Meta·Google) 셋업·집행 시작, 초기 ROAS 검증</li>
+              <li>SEO·GEO 기초 작업 — 키워드·메타데이터·사이트 구조 최적화</li>
+              <li>주간 리포트 가동, 빠른 A/B 개선 사이클 시작</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-n">Phase 2</div>
+            <div class="phase-name">스케일</div>
+            <div class="phase-time">Month 2–3 · 검증된 구조 위 확장</div>
+            <ul class="phase-list">
+              <li>검증된 ROAS 기반 광고비 단계적 확대</li>
+              <li>전환율·객단가(AOV) 최적화, 시즌·프로모션 캠페인 운영</li>
+              <li>월간 성과 리뷰 + 다음 단계 성장 액션 제언</li>
+            </ul>
+          </div>
+          <div class="phase-card">
+            <div class="phase-n">Phase 3</div>
+            <div class="phase-name">가속</div>
+            <div class="phase-time">Month 4 · 성장 가속·안정화</div>
+            <ul class="phase-list">
+              <li>성과 데이터 기반 광고·소재·채널 믹스 고도화</li>
+              <li>베스트셀러·번들 중심 객단가 확대와 재구매 흐름 강화</li>
+              <li>4개월 성과 종합 리뷰 + 다음 분기 확장 로드맵 제언</li>
+            </ul>
+          </div>
+        </div>
+        <p class="roadmap-note">※ 일정은 협의에 따라 조정 가능하며, 각 단계 종료 시점에 성과를 함께 리뷰합니다.</p>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 7: REVENUE TARGETS ===================== -->
+    <div class="slide s-rev" id="s7">
+      <div class="s-pad">
+        <div class="s-overline">04 · Target &amp; Growth</div>
+        <h2 class="s-headline" style="margin-top:10px;">매출 목표 및 성장 계획</h2>
+        <div class="rev-boxes">
+          <div class="rev-box rb-dark">
+            <div class="rb-label">2026년 12월 목표</div>
+            <div class="rb-sub">현재 월 2,000만 원 →</div>
+            <div class="rb-num">월 매출 1억 원</div>
+            <p class="rb-desc">현재 월 2,000만 원 기준, 올해 12월까지 월 매출 1억 원(약 5배) 달성을 목표로 합니다.</p>
+          </div>
+          <div class="rev-box rb-light">
+            <div class="rb-label">목표 달성 이후 · 추가 성장 여력</div>
+            <div class="rb-sub">공격적 투자 시</div>
+            <div class="rb-num">월 10억 원</div>
+            <p class="rb-desc">월 1억 달성 이후, 광고비를 월 2억 원 규모(ROAS 3.8~4.8 가정)로 확대하면 총 약 2.5억 투자로 월 매출 10억 원까지 확장할 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="growth-row">
+          <div class="growth-step">
+            <div class="growth-step-n">①</div>
+            <p>셋업·최적화로 전환 기반을 다집니다.</p>
+          </div>
+          <div class="growth-step">
+            <div class="growth-step-n">②</div>
+            <p>퍼포먼스 광고를 본격 투입해 트래픽·매출을 끌어올립니다.</p>
+          </div>
+          <div class="growth-step">
+            <div class="growth-step-n">③</div>
+            <p>검증된 ROAS 위에서 광고비를 단계적으로 확대하고, 신제품·신규 채널로 추가 확장합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 8: SCENARIO TABLE ===================== -->
+    <div class="slide s-scenario" id="s8">
+      <div class="s-pad">
+        <div class="s-overline">04 · Target &amp; Growth (cont.)</div>
+        <h2 class="s-headline" style="margin-top:10px;">광고비 투입 시나리오 (참고)</h2>
+        <p class="s-lead" style="margin-top:7px;">ROAS 가정에 기반한 추정 시나리오입니다. 광고비는 제나벨이 직접 부담하며, 집행 대행 수수료(마크업)는 없습니다.</p>
+        <div class="scenario-layout">
+          <div class="scenario-left">
+            <table class="dtable" style="margin-top:12px;">
+              <thead>
+                <tr>
+                  <th>시나리오</th>
+                  <th>월 광고비 (제나벨 부담)</th>
+                  <th>가정 ROAS</th>
+                  <th>기대 월 매출</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>보수</td>
+                  <td>월 5,000만 원</td>
+                  <td>3.8x</td>
+                  <td>월 2억 원 내외</td>
+                </tr>
+                <tr>
+                  <td>기본</td>
+                  <td>월 1억 원</td>
+                  <td>4.0x</td>
+                  <td>월 4억 원 내외</td>
+                </tr>
+                <tr>
+                  <td>공격</td>
+                  <td>월 2억 원</td>
+                  <td>3.8–4.8x</td>
+                  <td>월 8–10억 원</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="scenario-note">※ 위 수치는 ROAS 가정에 기반한 추정 시나리오이며, 실제 성과는 시장·소재·시즌에 따라 달라질 수 있습니다. 광고비는 제나벨이 직접 부담하며, 집행 대행 수수료(마크업)는 없습니다.</p>
+          </div>
+          <div class="band-col">
+            <img src="../assets/img/band_lineup.jpg" alt="">
+            <span class="band-col-cap">GENABELLE FORN LINE · 키워갈 제품 라인업</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 9: REPORTING ===================== -->
+    <div class="slide s-report" id="s9">
+      <div class="s-pad">
+        <div class="s-overline">05 · Reporting &amp; Collaboration</div>
+        <h2 class="s-headline" style="margin-top:10px;">리포팅 및 협업 방식</h2>
+        <p class="s-lead" style="margin-top:7px;">운영을 맡기고 깜깜이로 기다리는 일은 없습니다. 무엇을 하고 있고 숫자가 어떻게 움직이는지, 정해진 주기로 투명하게 공유합니다.</p>
+        <div class="report-layout">
+          <div>
+            <table class="dtable" style="margin-top:12px;">
+              <thead>
+                <tr><th>주기</th><th>내용</th><th>형식</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>실시간</td>
+                  <td>전담 슬랙·메신저 채널 — 운영 이슈·의사결정 즉시 공유</td>
+                  <td>상시</td>
+                </tr>
+                <tr>
+                  <td>주간</td>
+                  <td>트래픽·전환율·매출·ROAS 핵심 지표 + 그 주의 액션·다음 주 계획</td>
+                  <td>리포트</td>
+                </tr>
+                <tr>
+                  <td>월간</td>
+                  <td>월 성과 종합 리뷰 + 개선 인사이트 + 다음 달 성장 로드맵 제언</td>
+                  <td>리뷰 미팅</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div class="collab-label" style="margin-top:12px;">협업 원칙</div>
+            <div class="collab-list">
+              <div class="principle">
+                <div class="principle-icon"><i data-lucide="split-square-horizontal" style="width:12px;height:12px;"></i></div>
+                <div>
+                  <div class="principle-title">역할 분담</div>
+                  <p class="principle-body">제나벨은 의사결정과 브랜드 방향에 집중하고, 실행·운영의 무게는 스킨서울이 가져갑니다.</p>
+                </div>
+              </div>
+              <div class="principle">
+                <div class="principle-icon"><i data-lucide="eye" style="width:12px;height:12px;"></i></div>
+                <div>
+                  <div class="principle-title">투명성</div>
+                  <p class="principle-body">핵심 지표와 진행 상황을 숨기지 않고 공유합니다. 안 되는 것은 안 된다고, 데이터로 말씀드립니다.</p>
+                </div>
+              </div>
+              <div class="principle">
+                <div class="principle-icon"><i data-lucide="timer" style="width:12px;height:12px;"></i></div>
+                <div>
+                  <div class="principle-title">속도</div>
+                  <p class="principle-body">주간 단위로 빠르게 시도하고 측정하고 고칩니다. 한 달을 기다리지 않습니다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 10: PRICING ===================== -->
+    <div class="slide s-pricing" id="s10">
+      <div class="s-pad">
+        <div class="s-overline">06 · Investment</div>
+        <h2 class="s-headline" style="margin-top:10px;">제안 견적</h2>
+        <p class="s-lead" style="color:var(--gray);margin-top:7px;">4개월 운영 대행 패키지 기준입니다. 셋업 작업은 별도 비용 없이 운영비에 포함되며, 광고비는 별도(제나벨 직접 부담, 마크업 0)입니다.</p>
+        <div class="pricing-layout">
+          <table class="ctable">
+            <thead>
+              <tr><th>구분</th><th>항목</th><th style="text-align:right;">금액</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>셋업 · 1개월차 포함</td>
+                <td>쇼피파이 스토어 디자인 개선 및 전환율(CR) 최적화 · 애널리틱스 및 각종 트래커 설치 — 데이터 추적 환경 구축<br><span style="font-size:8px;color:var(--gray400);">(별도 셋업비 없이 운영비에 포함 — 운영 1개월차에 집중 진행)</span></td>
+                <td style="text-align:right;color:var(--success);font-weight:700;white-space:nowrap;">운영비에 포함</td>
+              </tr>
+              <tr>
+                <td>운영 대행 · 월</td>
+                <td>스토어·캠페인 운영, 검색·노출 최적화(SEO·GEO), 데이터 분석·리포팅, 전담 인력 밀착 관리 일체<br><span style="font-size:8px;color:var(--gray400);">(총 4개월 운영 · 분할 협의 가능)</span></td>
+                <td style="text-align:right;font-weight:700;white-space:nowrap;">₩5,000,000 / 월</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="total-box">
+            <div>
+              <div class="total-title">총 견적 (4개월 기준)</div>
+              <div class="total-amount">₩20,000,000</div>
+              <div class="total-badge">마크업 없음</div>
+              <ul class="total-details">
+                <li>운영비 ₩20,000,000 (월 ₩5,000,000 × 4개월, 분할 협의 가능)</li>
+                <li>셋업 작업은 운영비에 포함, 별도 셋업비 없음</li>
+                <li>광고비는 제나벨 직접 부담 · 변동비(결제·물류) 실비 패스스루</li>
+                <li>4개월 이후 월 ₩5,000,000 기준 재계약</li>
+              </ul>
+            </div>
+            <div class="total-cta">
+              <span class="total-cta-hint">지금 바로 시작할 수 있습니다</span>
+              <a href="mailto:admin@skin-seoul.com" class="btn-white">문의하기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== SLIDE 11: CLOSING ===================== -->
+    <div class="slide s-closing" id="s11">
+      <div class="closing-pad">
+        <div class="closing-quote">"보고서가 아니라, 실질적인 매출 결과로 증명하겠습니다."</div>
+        <p class="closing-sub">전체 흐름은 하나입니다 — 스킨서울이 제나벨의 성장을 끝까지 함께합니다.</p>
+        <div class="closing-divider"></div>
+        <div class="closing-headline">지금 시작하면, 12월이 달라집니다.</div>
+        <div class="next-steps">
+          <div class="nstep">
+            <div class="nstep-num">1</div>
+            <div class="nstep-title">견적 확정 · 킥오프</div>
+            <p class="nstep-body">4개월 운영 대행 패키지로 바로 착수합니다. 킥오프에서 목표·우선순위·커뮤니케이션 채널을 정렬합니다.</p>
+          </div>
+          <div class="nstep">
+            <div class="nstep-num">2</div>
+            <div class="nstep-title">셋업 · 데이터 환경 구축</div>
+            <p class="nstep-body">스토어 디자인·CR 최적화와 애널리틱스·트래커 설치를 먼저 완료해 측정 기반을 만듭니다.</p>
+          </div>
+          <div class="nstep">
+            <div class="nstep-num">3</div>
+            <div class="nstep-title">운영 · 성과 리뷰</div>
+            <p class="nstep-body">스토어·캠페인 운영과 SEO·GEO를 가동하고, 주간 리포트와 월간 리뷰로 빠르게 최적화합니다.</p>
+          </div>
+        </div>
+        <div class="closing-footer">
+          <img src="../assets/img/skinseoul-wordmark-white.png" alt="SkinSeoul" style="height:18px;opacity:0.65;">
+          <div class="closing-footer-contact">SkinSeoul · admin@skin-seoul.com · skin-seoul.com</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#stage -->
+</div><!-- /#stage-wrapper -->
+
+<!-- ===== NAVIGATION (fixed, outside stage) ===== -->
+<button id="nav-prev" aria-label="Previous slide" disabled>
+  <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+</button>
+<button id="nav-next" aria-label="Next slide">
+  <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+</button>
+<div id="nav-pills"></div>
+<div id="slide-counter">01 / 11</div>
+
+<script>
+  const TOTAL = 11;
+  let current = 1;
+  let animating = false;
+
+  const stage = document.getElementById('stage');
+  const counter = document.getElementById('slide-counter');
+  const pillsWrap = document.getElementById('nav-pills');
+  const btnPrev = document.getElementById('nav-prev');
+  const btnNext = document.getElementById('nav-next');
+  const allSlides = Array.from(document.querySelectorAll('.slide'));
+
+  /* ===== BUILD PILLS ===== */
+  for (let i = 1; i <= TOTAL; i++) {
+    const b = document.createElement('button');
+    b.className = 'pill' + (i === 1 ? ' active' : '');
+    b.textContent = i;
+    b.setAttribute('aria-label', 'Slide ' + i);
+    b.addEventListener('click', () => goTo(i));
+    pillsWrap.appendChild(b);
+  }
+
+  /* ===== GO TO SLIDE ===== */
+  function goTo(n) {
+    if (n < 1 || n > TOTAL || n === current || animating) return;
+    animating = true;
+    const dir = n > current ? 1 : -1;
+    const fromIdx = current - 1;
+    const toIdx = n - 1;
+    current = n;
+
+    const fromSlide = allSlides[fromIdx];
+    const toSlide = allSlides[toIdx];
+
+    /* Exit current slide */
+    fromSlide.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
+    fromSlide.style.opacity = '0';
+    fromSlide.style.transform = dir > 0 ? 'translateX(-28px)' : 'translateX(28px)';
+    fromSlide.style.pointerEvents = 'none';
+
+    /* Position incoming slide off-screen */
+    toSlide.style.transition = 'none';
+    toSlide.style.opacity = '0';
+    toSlide.style.transform = dir > 0 ? 'translateX(28px)' : 'translateX(-28px)';
+    toSlide.style.pointerEvents = 'none';
+
+    /* Force paint */
+    toSlide.getBoundingClientRect();
+
+    /* Animate incoming */
+    toSlide.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
+    toSlide.style.opacity = '1';
+    toSlide.style.transform = 'translateX(0)';
+    toSlide.classList.add('is-active');
+    fromSlide.classList.remove('is-active');
+
+    setTimeout(() => {
+      fromSlide.style.transition = '';
+      fromSlide.style.transform = '';
+      toSlide.style.transition = '';
+      toSlide.style.pointerEvents = 'all';
+      animating = false;
+    }, 340);
+
+    updateUI();
+  }
+
+  function updateUI() {
+    const c2 = String(current).padStart(2, '0');
+    const t2 = String(TOTAL).padStart(2, '0');
+    counter.textContent = c2 + ' / ' + t2;
+    btnPrev.disabled = current === 1;
+    btnNext.disabled = current === TOTAL;
+    document.querySelectorAll('.pill').forEach((p, i) => {
+      p.classList.toggle('active', i + 1 === current);
+    });
+  }
+
+  btnPrev.addEventListener('click', () => goTo(current - 1));
+  btnNext.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault(); goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); goTo(current - 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); goTo(1);
+    } else if (e.key === 'End') {
+      e.preventDefault(); goTo(TOTAL);
+    }
+  });
+
+  /* ===== STAGE SCALING ===== */
+  function scaleStage() {
+    const sw = window.innerWidth;
+    const sh = window.innerHeight;
+    const scale = Math.min(sw / 1280, sh / 720);
+    const ox = (sw - 1280 * scale) / 2;
+    const oy = (sh - 720 * scale) / 2;
+    stage.style.transform = 'translate(' + ox + 'px,' + oy + 'px) scale(' + scale + ')';
+  }
+
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+
+  /* ===== LUCIDE ===== */
+  lucide.createIcons();
+
+  /* ===== INIT ===== */
+  updateUI();
+</script>
+<a href="../?v=m" style="position:fixed;left:14px;bottom:14px;z-index:50;font:600 11px/1 'Apple SD Gothic Neo',system-ui,sans-serif;letter-spacing:.02em;color:rgba(225,211,255,.7);background:rgba(4,0,12,.55);border:1px solid rgba(225,211,255,.18);padding:7px 11px;border-radius:999px;text-decoration:none;backdrop-filter:blur(4px)">모바일 버전</a>
+</body>
+</html>
